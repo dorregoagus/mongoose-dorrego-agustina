@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import conectarDB from "./src/config/database.js";
 import userRoutes from "./src/routes/user.routes.js";
+import courseRoutes from "./src/routes/course.routes.js";
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/usuarios", userRoutes);
+app.use("/api/cursos", courseRoutes);
 
 // Ruta inicial de prueba
 app.get("/", (req, res) => {
