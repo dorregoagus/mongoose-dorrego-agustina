@@ -6,13 +6,15 @@ import {
     obtenerCursos,
     obtenerCursoPorId,
     actualizarCurso,
-    eliminarCurso
+    eliminarCurso,
+    inscribirEstudiante
 } from "../controllers/course.controller.js";
 
 import {
     validarIdCurso,
     validarCrearCurso,
-    validarActualizarCurso
+    validarActualizarCurso,
+    validarInscripcion
 } from "../middlewares/course.validators.js";
 
 import { validarCampos } from "../middlewares/validarCampos.js";
@@ -54,5 +56,10 @@ router.delete(
     validarCampos,
     eliminarCurso
 );
-
+router.post(
+    "/:id/estudiantes",
+    validarInscripcion,
+    validarCampos,
+    inscribirEstudiante
+);
 export default router;

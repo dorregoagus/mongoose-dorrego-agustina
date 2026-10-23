@@ -116,3 +116,32 @@ export const validarActualizarCurso = [
             return true;
         })
 ];
+
+export const validarInscripcion = [
+    param("id")
+        .isMongoId()
+        .withMessage("El ID del curso no es válido"),
+
+    body("estudiante")
+        .notEmpty()
+        .withMessage("El ID del estudiante es obligatorio")
+        .bail()
+        .isMongoId()
+        .withMessage("El ID del estudiante no es válido")
+        .bail()
+        .custom(async (id) => {
+            const estudiante = await User.findOne({
+                _id: id,
+                activo: true,
+                rol: "estudiante"
+            });
+
+            if (!estudiante) {
+                throw new Error(
+                    "El estudiante no existe, está inactivo o no tiene el rol correspondiente"
+                );
+            }
+
+            return true;
+        })
+];

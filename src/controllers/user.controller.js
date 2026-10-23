@@ -1,6 +1,8 @@
 
 import User from "../models/user.model.js";
 import { matchedData } from "express-validator";
+import Course from "../models/course.model.js";
+import Profile from "../models/profile.model.js";
 
 // Crear un usuario
 export const crearUsuario = async (req, res) => {
@@ -106,6 +108,7 @@ export const actualizarUsuario = async (req, res) => {
 };
 
 // Eliminación lógica de un usuario
+
 export const eliminarUsuario = async (req, res) => {
     try {
         const usuario = await User.findOneAndUpdate(
@@ -120,13 +123,31 @@ export const eliminarUsuario = async (req, res) => {
             });
         }
 
-        res.status(200).json({
-            mensaje: "Usuario eliminado correctamente"
+        // Desactivar los cursos del docente
+        await Course.updateMany(
+            { docente: usuario._id, activo: true },
+            { activo: false }
+        );
+
+        // Quitar al usuario de los cursos como estudiante
+        await Course.updateMany(
+            { estudiantes: usuario._id },
+            { $pull: { estudiantes: usuario._id } }
+        );
+
+        // Eliminar el perfil asociado al usuario
+        await Profile.findOneAndDelete({
+            usuario: usuario._id
+        });
+
+        return res.status(200).json({
+            mensaje: "Usuario eliminado correctamente y sus relaciones actualizadas"
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             mensaje: "Error al eliminar el usuario",
             error: error.message
         });
     }
 };
+
