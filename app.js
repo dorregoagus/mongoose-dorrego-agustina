@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import conectarDB from "./src/config/database.js";
 import userRoutes from "./src/routes/user.routes.js";
 import courseRoutes from "./src/routes/course.routes.js";
+import profileRoutes from "./src/routes/profile.routes.js";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 app.use("/api/usuarios", userRoutes);
 app.use("/api/cursos", courseRoutes);
+app.use("/api/perfiles", profileRoutes);
 
 // Ruta inicial de prueba
 app.get("/", (req, res) => {
